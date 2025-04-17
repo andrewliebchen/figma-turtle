@@ -40,18 +40,51 @@ npm run dev
 3. Select the `manifest.json` file in the `dist` folder
 4. Enable "Hot reload plugin" under Plugins > Development
 
-## Development Workflow
-
-- `npm run dev` - Start development server with hot reloading
-- `npm run build` - Build for production
-- `npm test` - Run tests
-
 ## Project Structure
 
 - `src/` - Frontend UI code (React)
+  - `index-react.tsx` - Main UI entry point
+  - `utils.ts` - Frontend messaging utilities
+  - `globals.ts` - Shared type definitions
 - `src-code/` - Figma plugin backend code
+  - `code.ts` - Main plugin code
+  - `utils/` - Backend utilities
+- `shared/` - Shared code between frontend and backend
+  - `universals.ts` - Shared type definitions and constants
 - `dist/` - Built plugin files
-- `manifest.json` - Plugin configuration
+
+## Type-Safe Messaging System
+
+The plugin uses a type-safe messaging system between the frontend and backend:
+
+1. Message types are defined in `shared/universals.ts`:
+```typescript
+export type EventTS = {
+  "test-connection": TestConnectionData;
+  "connection-response": ConnectionResponseData;
+  "generate-layout": GenerateLayoutData;
+  "cancel": CancelData;
+};
+```
+
+2. Send messages from frontend to backend:
+```typescript
+dispatchTS("test-connection", {});
+```
+
+3. Listen for messages in backend:
+```typescript
+listenTS("test-connection", () => {
+  dispatchTS("connection-response", { message: "Hello!" });
+});
+```
+
+4. Listen for responses in frontend:
+```typescript
+listenTS("connection-response", (data) => {
+  console.log(data.message);
+});
+```
 
 ## Technical Stack
 
