@@ -2,6 +2,7 @@ import type { Message, PluginMessageEvent } from "../../src/globals";
 import type { EventTS } from "../../shared/universals";
 
 export const dispatch = (data: any, origin = "*") => {
+  console.log('[Plugin] Dispatching message:', data);
   figma.ui.postMessage(data, {
     origin,
   });
@@ -12,6 +13,7 @@ export const dispatchTS = <Key extends keyof EventTS>(
   data: EventTS[Key],
   origin = "*",
 ) => {
+  console.log('[Plugin] Dispatching typed message:', { event, data });
   dispatch({ event, data }, origin);
 };
 
@@ -20,10 +22,17 @@ export const listenTS = <Key extends keyof EventTS>(
   callback: (data: EventTS[Key]) => any,
   listenOnce = false,
 ) => {
+  console.log('[Plugin] Setting up listener for:', eventName);
+
   const func = (event: any) => {
+    console.log('[Plugin] Received message:', event);
     if (event.event === eventName) {
-      callback(event);
-      if (listenOnce) figma.ui && figma.ui.off("message", func); // Remove Listener so we only listen once
+      console.log('[Plugin] Matched event, calling callback with:', event.data);
+      callback(event.data);
+      if (listenOnce) {
+        console.log('[Plugin] One-time listener, removing');
+        figma.ui && figma.ui.off("message", func);
+      }
     }
   };
 

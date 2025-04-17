@@ -1,3 +1,73 @@
+# Figma Turtle
+
+An AI-powered Figma plugin that enables designers to generate visual layouts using natural language.
+
+## Features
+
+- Natural language layout generation
+- Real-time preview of generated layouts
+- Figma-native component conversion
+- Design refinement through conversation
+- OpenAI integration for intelligent design assistance
+
+## Prerequisites
+
+- Node.js 18 or later
+- NPM (comes with Node.js)
+- Figma Desktop App
+
+## Development Setup
+
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Build the plugin (required before first run):
+```bash
+npm run build
+```
+
+3. Start development server with hot reloading:
+```bash
+npm run dev
+```
+
+## Adding Plugin to Figma
+
+1. Open Figma Desktop App
+2. Go to Plugins > Development > Import Plugin from Manifest
+3. Select the `manifest.json` file in the `dist` folder
+4. Enable "Hot reload plugin" under Plugins > Development
+
+## Development Workflow
+
+- `npm run dev` - Start development server with hot reloading
+- `npm run build` - Build for production
+- `npm test` - Run tests
+
+## Project Structure
+
+- `src/` - Frontend UI code (React)
+- `src-code/` - Figma plugin backend code
+- `dist/` - Built plugin files
+- `manifest.json` - Plugin configuration
+
+## Technical Stack
+
+- **Frontend**: React + TypeScript
+- **Build System**: Vite
+- **AI Integration**: OpenAI API
+- **Boilerplate**: [Bolt Figma](https://github.com/hyperbrew/bolt-figma)
+
+## Development Plan
+
+See [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md) for detailed development phases and progress tracking.
+
+## License
+
+MIT
+
 <img src="src/assets/bolt-figma-darkmode.svg" alt="Bolt Figma" title="Bolt Figma" width="400" />
 
 A lightning-fast boilerplate for building Figma Plugins in Svelte, React, or Vue built on Vite + TypeScript + Sass
@@ -84,69 +154,52 @@ Bolt Figma Info Page Link: https://hyperbrew.co/resources/bolt-figma
 
 </div>
 
-## Prerequisites
+### Info on Build Process
 
-- [Node.js 18](https://nodejs.org/en/) or later
-- Package manager either
-  - NPM (comes with Node.js)
-  - [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/) ( ensure by running `yarn set version classic` )
-  - [PNPM](https://pnpm.io/installation) ( ensure by running `pnpm --version` )
-- Figma Desktop App
+Frontend code is built to the `.tmp` directory temporarily and then copied to the `dist` folder for final. This is done to avoid Figma throwing plugin errors with editing files directly in the `dist` folder.
 
-## Quick Start
+The frontend code (JS, CSS, HTML) is bundled into a single `index.html` file and all assets are inlined.
 
-Create your new Bolt Figma project (follow CLI prompts)
+The backend code is bundled into a single `code.js` file.
 
-- yarn - `yarn create bolt-figma`
-- npm - `npx create-bolt-figma`
-- pnpm - `pnpm create-bolt-figma`
+Finally the `manifest.json` is generated from the `figma.config.ts` file with type-safety. This is configured when running `yarn create bolt-figma`, but you can make additional modifications to the `figma.config.ts` file after initialization.
 
-Change directory to the new project
+### Read if Dev or Production Mode
 
-- `cd project`
+Use the built-in Vite env var MODE to determine this:
 
-Install Dependencies (if not already done by create command)
+```js
+const mode = import.meta.env.MODE; // 'dev' or 'production'
+```
 
-- yarn - `yarn`
-- npm - `npm i`
-- pnpm - `pnpm i`
+### Troubleshooting Assets
 
-Build the plugin (must run before `dev`, can also run after for panel to work statically without the process)
+Figma requires the entire frontend code to be wrapped into a single HTML file. For this reason, bundling external images, svgs, and other assets is not possible.
 
-- yarn `yarn build`
-- npm `npm run build`
-- pnpm `pnpm build`
+The solution to this is to inline all assets. Vite is already setup to inline most asset types it understands such as JPG, PNG, SVG, and more, however if the file type you're trying to inline doesn't work, you may need to add it to the assetsInclude array in the vite config:
 
-Run the plugin in hot reload mode for development
+More Info: https://vitejs.dev/config/shared-options.html#assetsinclude
 
-_Note: Ensure "Hot reload plugin" is checked in Figma Plugin Development menu_
+Additionally, you may be able to import the file as a raw string, and then use that data inline in your component using the `?raw` suffix.
 
-- yarn `yarn dev`
-- npm `npm run dev`
-- pnpm `pnpm dev`
+For example:
 
-Bundles your plugin and specified assets from `copyZipAssets` to a zip archive in the `./zip` folder
+```ts
+import icon from "./assets/icon.svg?raw";
+```
 
-- yarn `yarn zip`
-- npm `npm run zip`
-- pnpm `pnpm zip`
+and then use that data inline in your component:
 
-Write frontend UI code in `src/main.svelte`
+```js
+// Svelte
+{@html icon}
 
-Write backend figma code in `src-code/code.ts`
+// React
+<div dangerouslySetInnerHTML={{ __html: icon }}></div>
 
-### Add Plugin to Figma
-
-1. Open Figma
-2. Select Figma Menu > Plugins > Development > Import Plugin from Manifest
-3. Select the `manifest.json` file in the `dist` folder
-4. Your plugin can now be launched from the menu or managed under "Manage Plugins"
-
-### Load and Debug Plugin
-
-1. Launch your plugin by going to `Figma Menu > Plugins > Development > "Your Plugin"`
-2. Ensure Hot Reloading is checked under `Figma Menu > Plugins > Development > Hot Reloading Plugin`
-3. Open the Dev Tools console with `Figma Menu > Plugins > Development > Show/Hide Console`
+// Vue
+<div v-html="icon"></div>
+```
 
 ---
 
@@ -221,50 +274,3 @@ dispatchTS("myCustomEvent", { oneValue: "name", anotherValue: 20 });
 ```
 
 ---
-
-### Info on Build Process
-
-Frontend code is built to the `.tmp` directory temporarily and then copied to the `dist` folder for final. This is done to avoid Figma throwing plugin errors with editing files directly in the `dist` folder.
-
-The frontend code (JS, CSS, HTML) is bundled into a single `index.html` file and all assets are inlined.
-
-The backend code is bundled into a single `code.js` file.
-
-Finally the `manifest.json` is generated from the `figma.config.ts` file with type-safety. This is configured when running `yarn create bolt-figma`, but you can make additional modifications to the `figma.config.ts` file after initialization.
-
-### Read if Dev or Production Mode
-
-Use the built-in Vite env var MODE to determine this:
-
-```js
-const mode = import.meta.env.MODE; // 'dev' or 'production'
-```
-
-### Troubleshooting Assets
-
-Figma requires the entire frontend code to be wrapped into a single HTML file. For this reason, bundling external images, svgs, and other assets is not possible.
-
-The solution to this is to inline all assets. Vite is already setup to inline most asset types it understands such as JPG, PNG, SVG, and more, however if the file type you're trying to inline doesn't work, you may need to add it to the assetsInclude array in the vite config:
-
-More Info: https://vitejs.dev/config/shared-options.html#assetsinclude
-
-Additionally, you may be able to import the file as a raw string, and then use that data inline in your component using the `?raw` suffix.
-
-For example:
-
-```ts
-import icon from "./assets/icon.svg?raw";
-```
-
-and then use that data inline in your component:
-
-```js
-// Svelte
-{@html icon}
-
-// React
-<div dangerouslySetInnerHTML={{ __html: icon }}></div>
-
-// Vue
-<div v-html="icon"></div>
-```
