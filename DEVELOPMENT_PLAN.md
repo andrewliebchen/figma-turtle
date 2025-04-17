@@ -53,26 +53,25 @@ Dependencies:
 - [x] Basic error handling is in place for development environment
 
 ### Phase 2: Core UI and OpenAI Agent Integration
-**Status**: Not Started
+**Status**: In Progress
 **Estimated Duration**: 2-3 days
 
 Tasks:
-- [ ] Build prompt input interface
-  - [ ] Create chat-like interface for designer interaction
-  - [ ] Add message history display
-  - [ ] Implement input field with send button
-- [ ] Implement OpenAI API integration
-  - [ ] Set up reasoning model (`o4-mini-2025-04-16`) for design planning
-    - [ ] Implement chat agent for design discussion
-    - [ ] Add context management for conversation history
-    - [ ] Handle design refinement requests
+- [x] Build prompt input interface
+  - [x] Create chat-like interface for designer interaction
+  - [x] Add message history display
+  - [x] Implement input field with send button
+- [x] Implement OpenAI API integration
+  - [x] Set up reasoning model (`o4-mini-2025-04-16`) for design planning
+    - [x] Implement chat agent for design discussion
+    - [x] Add context management for conversation history
+    - [x] Handle design refinement requests
   - [ ] Configure HTML generation model (`o3-mini-2025-01-31`)
     - [ ] Implement drawing agent for HTML/CSS generation
     - [ ] Add validation for generated code
     - [ ] Handle generation errors and retries
-  - [ ] Implement type-safe API communication
-- [ ] Add basic error handling and loading states
-- [ ] Implement "Generate Layout" button
+  - [x] Implement type-safe API communication
+- [x] Add basic error handling and loading states
 - [ ] Add conversation persistence (local storage)
 
 Dependencies:
@@ -80,21 +79,21 @@ Dependencies:
 - Phase 1 completion
 
 **Acceptance Criteria**:
-- [ ] Users can have a natural conversation with the design agent
-- [ ] Design agent can:
-  - [ ] Understand and clarify design requirements
-  - [ ] Suggest improvements to the design
-  - [ ] Handle follow-up questions and refinements
-  - [ ] Maintain context throughout the conversation
+- [x] Users can have a natural conversation with the design agent
+- [x] Design agent can:
+  - [x] Understand and clarify design requirements
+  - [x] Suggest improvements to the design
+  - [x] Handle follow-up questions and refinements
+  - [x] Maintain context throughout the conversation
 - [ ] Drawing agent can:
   - [ ] Generate valid HTML/CSS based on the design discussion
   - [ ] Handle common layout patterns
   - [ ] Generate responsive designs
   - [ ] Include basic styling
-- [ ] Loading states are shown during API calls
-- [ ] Error messages are displayed for failed API calls
+- [x] Loading states are shown during API calls
+- [x] Error messages are displayed for failed API calls
 - [ ] Conversation history is preserved between sessions
-- [ ] API key can be securely configured
+- [x] API key can be securely configured
 - [ ] Generated HTML/CSS is validated before proceeding
 
 ### Phase 3: HTML/CSS Preview System

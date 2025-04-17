@@ -9,12 +9,15 @@ An AI-powered Figma plugin that enables designers to generate visual layouts usi
 - Figma-native component conversion
 - Design refinement through conversation
 - OpenAI integration for intelligent design assistance
+  - Reasoning model (`o4-mini-2025-04-16`) for design planning
+  - HTML generation model (`o3-mini-2025-01-31`) for layout creation
 
 ## Prerequisites
 
 - Node.js 18 or later
 - NPM (comes with Node.js)
 - Figma Desktop App
+- OpenAI API key
 
 ## Development Setup
 
@@ -23,12 +26,20 @@ An AI-powered Figma plugin that enables designers to generate visual layouts usi
 npm install
 ```
 
-2. Build the plugin (required before first run):
+2. Set up environment variables:
+   - Copy `.env.example` to `.env`
+   - Add your OpenAI API key to the `.env` file:
+     ```
+     VITE_OPENAI_API_KEY=your_openai_api_key_here
+     ```
+   - Note: The API key must be prefixed with `VITE_` to be accessible in the frontend
+
+3. Build the plugin (required before first run):
 ```bash
 npm run build
 ```
 
-3. Start development server with hot reloading:
+4. Start development server with hot reloading:
 ```bash
 npm run dev
 ```
@@ -48,10 +59,39 @@ npm run dev
   - `globals.ts` - Shared type definitions
 - `src-code/` - Figma plugin backend code
   - `code.ts` - Main plugin code
+  - `env.ts` - Environment variable handling
   - `utils/` - Backend utilities
 - `shared/` - Shared code between frontend and backend
   - `universals.ts` - Shared type definitions and constants
 - `dist/` - Built plugin files
+
+## OpenAI Integration
+
+The plugin uses two OpenAI models for different aspects of the design process:
+
+1. Reasoning Model (`o4-mini-2025-04-16`):
+   - Handles natural language understanding
+   - Manages design conversation
+   - Provides design suggestions
+   - Uses `max_completion_tokens` parameter for response length control
+
+2. HTML Generation Model (`o3-mini-2025-01-31`):
+   - Converts design descriptions to HTML/CSS
+   - Generates responsive layouts
+   - Handles styling and component structure
+
+### API Configuration
+
+The OpenAI API is configured in `src-code/code.ts`:
+```typescript
+const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
+const MODEL = 'o4-mini-2025-04-16';
+```
+
+Environment variables are handled in `src-code/env.ts`:
+```typescript
+export const OPENAI_API_KEY = process.env.VITE_OPENAI_API_KEY || '';
+```
 
 ## Type-Safe Messaging System
 
@@ -85,6 +125,21 @@ listenTS("connection-response", (data) => {
   console.log(data.message);
 });
 ```
+
+## Development Status
+
+Current development progress can be found in [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md). Key completed features:
+
+- ✅ Basic plugin structure and UI
+- ✅ OpenAI API integration with reasoning model
+- ✅ Chat interface with message history
+- ✅ Error handling and loading states
+- ✅ Type-safe messaging system
+
+In progress:
+- 🔄 HTML generation model integration
+- 🔄 Layout preview system
+- 🔄 Conversation persistence
 
 ## Technical Stack
 

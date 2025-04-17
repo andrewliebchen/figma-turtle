@@ -9,6 +9,7 @@
   "homepage": "https://github.com/hyperbrew/bolt-figma",
   "type": "module",
   "scripts": {
+    "prebuild": "node scripts/inject-env.js",
     "dev": "vite build --watch --mode dev",
     "devcode": "vite build --watch --mode dev --config vite.config.code.ts",
     "build": "vite build",
@@ -18,8 +19,12 @@
     "zip": "cross-env MODE=zip vite build"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-material-symbols": "^4.4.0",
+    "theme-ui": "^0.17.2"
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.94.0",
@@ -28,6 +33,7 @@
     "@types/react-dom": "^18.3.6",
     "@vitejs/plugin-react": "^4.2.1",
     "cross-env": "^7.0.3",
+    "dotenv": "^16.5.0",
     "sass": "^1.75.0",
     "typescript": "^5.0.2",
     "vite": "^5.2.12",
